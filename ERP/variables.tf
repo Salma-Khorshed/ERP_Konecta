@@ -63,3 +63,24 @@ variable "backend_image" {
   type        = string
   default     = "postgres:13"   # Placeholder; replace with your image
 }
+variable "influxdb_ami" {
+  description = "AMI ID for the InfluxDB EC2 instance"
+  type        = string
+}
+
+variable "grafana_ami" {
+  description = "AMI ID for the Grafana EC2 instance"
+  type        = string
+}
+
+variable "influxdb_instance_type" {
+  description = "Instance type for the InfluxDB EC2"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "grafana_instance_type" {
+  description = "Instance type for Grafana"
+  type        = string
+  default     = "t2.micro"
+}

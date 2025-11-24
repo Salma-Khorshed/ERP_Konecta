@@ -14,3 +14,11 @@ output "backend_sg_id" {
 output "rds_sg_id" {
   value = aws_security_group.rds.id
 }
+
+output "influxdb_sg_id" {
+  value = aws_security_group.influxdb_sg.id
+}
+
+output "grafana_sg_id" {
+  value = aws_security_group.grafana_sg.id
+}

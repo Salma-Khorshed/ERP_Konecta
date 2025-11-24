@@ -1,9 +1,9 @@
 module "vpc" {
   source = "./modules/vpc"
 
-  vpc_cidr          = var.vpc_cidr
-  public_subnets    = var.public_subnets
-  private_subnets   = var.private_subnets
+  vpc_cidr           = var.vpc_cidr
+  public_subnets     = var.public_subnets
+  private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
 
   project_name = var.project_name
@@ -51,10 +51,9 @@ module "ecs" {
 
   ecs_execution_role_arn = module.iam.ecs_execution_role_arn
 
-  aws_region = var.aws_region
-  project_name = var.project_name
-  environment  = var.environment
-
+  aws_region    = var.aws_region
+  project_name  = var.project_name
+  environment   = var.environment
   frontend_image = var.frontend_image
   backend_image  = var.backend_image
 
@@ -62,4 +61,35 @@ module "ecs" {
   db_password = var.db_password
 
   rds_endpoint = module.rds.rds_endpoint
+}
+
+# ================================
+# NEW — InfluxDB EC2 MODULE
+# ================================
+module "influxdb" {
+  source            = "./modules/influxdb"
+  ami               = var.influxdb_ami
+  public_subnet_id  = module.vpc.public_subnet_ids[0]
+  sg_id             = module.security_groups.influxdb_sg_id
+
+  project_name      = var.project_name
+  environment       = var.environment
+}
+
+
+# ================================
+# NEW — Grafana EC2 MODULE
+# ================================
+module "grafana" {
+  source = "./modules/grafana"
+
+  public_subnet_id = module.vpc.public_subnet_ids[0]
+  sg_id            = module.security_groups.grafana_sg_id
+  ami              = var.grafana_ami
+
+  project_name     = var.project_name
+  environment      = var.environment
+
+  instance_type    = var.grafana_instance_type
+  influxdb_url     = module.influxdb.influxdb_private_ip
 }
